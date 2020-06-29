@@ -11,17 +11,19 @@ using std::cout;
 using std::cin;
 using std::endl;
 
+DWORD WINAPI ServerThreadFun(LPVOID p);
+
 class TcpServer
 {
-
-
 	void debuglog(const char *strLog);
 	int initialization();
 	SOCKET Bind_Listen(int nBacklog);
 	SOCKET AcceptConnection(SOCKET hSocket);
+
 	BOOL ClientConFun(SOCKET sd);
 	BOOL CloseConnection(SOCKET sd);
 public:
+	friend DWORD WINAPI ServerThreadFun(LPVOID p);
 	TcpServer(int nBacklog);
 };
 
