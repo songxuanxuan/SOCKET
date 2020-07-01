@@ -146,13 +146,14 @@ BOOL TcpServer::CloseConnection(SOCKET sd)
 	}
 	return true;
 }
- DWORD WINAPI ServerThreadFun(LPVOID p)
+ DWORD WINAPI TcpServer::ServerThreadFun(LPVOID p)
 {
-	if (ClientConFun((SOCKET)p) == false)
+	 TcpServer* tcpServer = (TcpServer*)p;
+	if (tcpServer->ClientConFun(tcpServer->hClientIn) == false)
 	{
 		return 0;
 	}
-	if (CloseConnection((SOCKET)p) == false)
+	if (tcpServer->CloseConnection(tcpServer->hClientIn) == false)
 	{
 		return 0;
 	}
@@ -160,15 +161,13 @@ BOOL TcpServer::CloseConnection(SOCKET sd)
 }
 TcpServer::TcpServer(int nBacklog)
 {
-	SOCKET hServer;
-	SOCKET hClientIn;
 	initialization();
 	hServer = Bind_Listen(nBacklog);
 	while (true)
 	{
 		cout << "µÈ´ýÁ´½Ó¡£¡£¡£" << endl;
 		hClientIn = AcceptConnection(hServer);
-		HANDLE hThread = CreateThread(NULL, 0, ServerThreadFun, (LPVOID)hClientIn, 0, NULL);
+		HANDLE hThread = CreateThread(NULL, 0, ServerThreadFun, (LPVOID)this, 0, NULL);
 		if (hThread)
 		{
 			CloseHandle(hThread);

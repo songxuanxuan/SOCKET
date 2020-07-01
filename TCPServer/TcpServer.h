@@ -15,6 +15,9 @@ DWORD WINAPI ServerThreadFun(LPVOID p);
 
 class TcpServer
 {
+	SOCKET hServer;
+	SOCKET hClientIn;
+
 	void debuglog(const char *strLog);
 	int initialization();
 	SOCKET Bind_Listen(int nBacklog);
@@ -23,7 +26,7 @@ class TcpServer
 	BOOL ClientConFun(SOCKET sd);
 	BOOL CloseConnection(SOCKET sd);
 public:
-	friend DWORD WINAPI ServerThreadFun(LPVOID p);
+	static DWORD WINAPI ServerThreadFun(LPVOID p);
 	TcpServer(int nBacklog);
 };
 
